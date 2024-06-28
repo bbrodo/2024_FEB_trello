@@ -15,14 +15,16 @@ class Card(db.Model):
 
     user = db.relationship('User', 
     back_populates='cards')
+    comments = db.relationship("Comment", back_populates="card", cascade="all, delete")
 
 
 class CardSchema(ma.Schema):
 
     user = fields.Nested('UserSchema', only=["id", "name", "email"])
+    comments = fields.List(fields.Nested("CommentSchema", exclude=["card"]))
 
     class Meta:
-        fields = ("id", "title", "description", "date", "status", "priority", "user")
+        fields = ("id", "title", "description", "date", "status", "priority", "user", "comments")
 
 card_schema = CardSchema()
 cards_schema = CardSchema(many=True)
